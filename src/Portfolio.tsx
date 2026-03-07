@@ -12,6 +12,7 @@ import {
   Send,
   Sparkles
 } from 'lucide-react';
+import { useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 // --- CONFIGURATION ---
 const GITHUB_USERNAME = 'TALVIN29'; // <-- REPLACE THIS WITH YOUR GITHUB USERNAME
@@ -36,6 +37,37 @@ export default function Portfolio() {
   const [isSyncing, setIsSyncing] = useState(true);
   const [ideaText, setIdeaText] = useState('');
   const [isIdeaSubmitted, setIsIdeaSubmitted] = useState(false);
+
+  // --- 3D Hover Effect State ---
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseXSpring = useSpring(x);
+  const mouseYSpring = useSpring(y);
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    
+    const width = rect.width;
+    const height = rect.height;
+    
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -105,7 +137,7 @@ export default function Portfolio() {
         <header className="flex justify-between items-center mb-24">
           <div className="flex items-center gap-2">
             <Terminal className="w-6 h-6 text-emerald-400" />
-            <span className="text-xl font-bold tracking-tighter text-white">JD.sys</span>
+            <span className="text-xl font-bold tracking-tighter text-white">System.Init</span>
           </div>
           <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-full backdrop-blur-md">
             <div className={`w-2 h-2 rounded-full ${isSyncing ? 'bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.8)]' : 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]'} animate-pulse`} />
@@ -128,7 +160,7 @@ export default function Portfolio() {
                 Architecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Scalable Automation</span> &amp; FinTech Solutions.
               </h1>
               <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-light max-w-2xl">
-                 Talvin engineers high-performance systems that bridge complex data logic with seamless digital experiences. With a focus on real-world impact, he builds practical tools that streamline operations and elevate financial technologies.
+                 Engineering high-performance systems that bridge complex data logic with seamless digital experiences. Focused on real-world impact, building practical tools that streamline operations and elevate financial technologies.
               </p>
               <div className="flex flex-wrap gap-4 pt-4">
                  <a href="#projects" className="group relative px-8 py-4 font-semibold text-lg bg-emerald-500 text-[#090909] rounded-xl overflow-hidden hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
@@ -141,28 +173,52 @@ export default function Portfolio() {
               </div>
             </div>
             
-            <div className="relative w-64 h-64 md:w-80 md:h-80 shrink-0">
+            <div className="relative w-64 h-64 md:w-80 md:h-80 shrink-0 [perspective:1000px]">
               {/* Decorative background glows */}
               <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
-              <div className="absolute inset-[-10%] bg-blue-500/10 blur-2xl rounded-full" />
+              <div className="absolute inset-[-10%] bg-blue-500/10 blur-2xl rounded-full animate-pulse" />
               
-              {/* Profile Image Container */}
-              <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
+              {/* Profile Image Container - 3D Tilt */}
+              <motion.div 
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                style={{
+                  rotateY,
+                  rotateX,
+                  transformStyle: "preserve-3d",
+                }}
+                className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(16,185,129,0.15)] bg-[#050505] cursor-crosshair group"
+              >
+                {/* Dynamic Glare Overlay */}
+                <motion.div 
+                  className="absolute inset-0 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+                  style={{
+                    background: useTransform(
+                      [mouseXSpring, mouseYSpring],
+                      ([currentX, currentY]) => {
+                        const bgX = (currentX as number) * 100 + 50;
+                        const bgY = (currentY as number) * 100 + 50;
+                        return `radial-gradient(circle at ${bgX}% ${bgY}%, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 60%)`;
+                      }
+                    )
+                  }}
+                />
+                
                 <img 
                   src="/portfolio_landing_page/profile.jpg" 
-                  alt="Talvin Lee" 
-                  className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+                  alt="Profile" 
+                  className="w-full h-full object-cover object-center transform transition-transform duration-700"
+                  style={{ transform: "translateZ(50px) scale(1.1)" }}
                   onError={(e) => {
-                    // Fallback to absolute path just in case we are running locally without the base path resolving
                     (e.target as HTMLImageElement).src = "/profile.jpg";
                   }}
                 />
-              </div>
+              </motion.div>
               
-              {/* Floating Badge */}
-              <div className="absolute -bottom-6 -right-6 bg-[#090909] p-4 rounded-2xl border border-white/10 shadow-xl flex items-center gap-3 backdrop-blur-xl">
+              {/* Floating Badge (Also gets 3D effect visually by sitting on top) */}
+              <div className="absolute -bottom-6 -right-6 bg-[#090909]/90 p-4 rounded-2xl border border-white/10 shadow-2xl flex items-center gap-3 backdrop-blur-xl z-30 transition-transform duration-500 hover:scale-110 cursor-pointer">
                 <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
-                <span className="text-sm font-medium text-white pr-2">Available for Work</span>
+                <span className="text-sm font-medium text-white pr-2">System Ready</span>
               </div>
             </div>
           </motion.section>
@@ -311,7 +367,7 @@ export default function Portfolio() {
               </div>
             </div>
             <div className="mt-12 text-center text-sm text-gray-600 font-mono">
-              <p>© {new Date().getFullYear()} JD.sys. All systems nominal.</p>
+              <p>© {new Date().getFullYear()} System.Init. All systems nominal.</p>
             </div>
           </motion.footer>
 
