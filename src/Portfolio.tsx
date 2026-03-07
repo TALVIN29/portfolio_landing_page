@@ -149,12 +149,12 @@ export default function Portfolio() {
               {/* Profile Image Container */}
               <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
                 <img 
-                  src="/portfolio_landing_page/profile.png" 
+                  src="/portfolio_landing_page/profile.jpg" 
                   alt="Talvin Lee" 
                   className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
                   onError={(e) => {
                     // Fallback to absolute path just in case we are running locally without the base path resolving
-                    (e.target as HTMLImageElement).src = "/profile.png";
+                    (e.target as HTMLImageElement).src = "/profile.jpg";
                   }}
                 />
               </div>
