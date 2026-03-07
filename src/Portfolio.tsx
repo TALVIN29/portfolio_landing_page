@@ -122,21 +122,48 @@ export default function Portfolio() {
           className="space-y-24"
         >
           {/* HERO SECTION */}
-          <motion.section variants={itemVariants} className="max-w-3xl space-y-6">
-            <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight">
-              Architecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Scalable Automation</span> &amp; FinTech Solutions.
-            </h1>
-            <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-light max-w-2xl">
-               I engineer high-performance systems that bridge complex data logic with seamless digital experiences for real-world impact.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-               <a href="#projects" className="group relative px-8 py-4 font-semibold text-lg bg-emerald-500 text-[#090909] rounded-xl overflow-hidden hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
-                 <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-400 to-emerald-300 opacity-0 group-hover:opacity-100 transition-opacity" />
-                 <span className="relative flex items-center gap-2 z-10">Explore Work <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></span>
-               </a>
-               <a href="#contact" className="group px-8 py-4 font-semibold text-lg text-white bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all flex items-center gap-2 backdrop-blur-sm">
-                 Contact Me <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-               </a>
+          <motion.section variants={itemVariants} className="flex flex-col-reverse lg:flex-row items-center gap-12 lg:gap-20">
+            <div className="flex-1 space-y-6 max-w-3xl">
+              <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight">
+                Architecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Scalable Automation</span> &amp; FinTech Solutions.
+              </h1>
+              <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-light max-w-2xl">
+                 Talvin engineers high-performance systems that bridge complex data logic with seamless digital experiences. With a focus on real-world impact, he builds practical tools that streamline operations and elevate financial technologies.
+              </p>
+              <div className="flex flex-wrap gap-4 pt-4">
+                 <a href="#projects" className="group relative px-8 py-4 font-semibold text-lg bg-emerald-500 text-[#090909] rounded-xl overflow-hidden hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
+                   <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-400 to-emerald-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                   <span className="relative flex items-center gap-2 z-10">Explore Work <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" /></span>
+                 </a>
+                 <a href="#contact" className="group px-8 py-4 font-semibold text-lg text-white bg-white/[0.03] rounded-xl border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] transition-all flex items-center gap-2 backdrop-blur-sm">
+                   Contact Me <Mail className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                 </a>
+              </div>
+            </div>
+            
+            <div className="relative w-64 h-64 md:w-80 md:h-80 shrink-0">
+              {/* Decorative background glows */}
+              <div className="absolute inset-0 bg-emerald-500/20 blur-3xl rounded-full" />
+              <div className="absolute inset-[-10%] bg-blue-500/10 blur-2xl rounded-full" />
+              
+              {/* Profile Image Container */}
+              <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#050505]">
+                <img 
+                  src="/portfolio_landing_page/profile.png" 
+                  alt="Talvin Lee" 
+                  className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+                  onError={(e) => {
+                    // Fallback to absolute path just in case we are running locally without the base path resolving
+                    (e.target as HTMLImageElement).src = "/profile.png";
+                  }}
+                />
+              </div>
+              
+              {/* Floating Badge */}
+              <div className="absolute -bottom-6 -right-6 bg-[#090909] p-4 rounded-2xl border border-white/10 shadow-xl flex items-center gap-3 backdrop-blur-xl">
+                <div className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_10px_rgba(52,211,153,0.8)]" />
+                <span className="text-sm font-medium text-white pr-2">Available for Work</span>
+              </div>
             </div>
           </motion.section>
 
