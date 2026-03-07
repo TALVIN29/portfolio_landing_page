@@ -42,12 +42,15 @@ export default function Portfolio() {
 
     const fetchGitHubProjects = async () => {
       try {
-        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=4`);
+        const response = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=10`);
         if (!response.ok) throw new Error('Failed to fetch from GitHub');
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
-          const mappedProjects = data.map((repo: any, index: number) => ({
+          // Filter out the portfolio repository itself and take the top 4
+          const filteredProjects = data.filter((repo: any) => repo.name !== 'portfolio_landing_page').slice(0, 4);
+
+          const mappedProjects = filteredProjects.map((repo: any, index: number) => ({
             id: repo.id,
             title: repo.name,
             tag: repo.language ? `Built with ${repo.language}` : 'Cross-platform',
@@ -121,10 +124,10 @@ export default function Portfolio() {
           {/* HERO SECTION */}
           <motion.section variants={itemVariants} className="max-w-3xl space-y-6">
             <h1 className="text-5xl md:text-7xl font-bold text-white tracking-tight leading-tight">
-              Building <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Practical &amp; Social</span> Tools.
+              Architecting <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-blue-500">Scalable Automation</span> &amp; FinTech Solutions.
             </h1>
             <p className="text-lg md:text-xl text-gray-400 leading-relaxed font-light max-w-2xl">
-               I bridge data logic and automation to build high-performance tools for real-world impact.
+               I engineer high-performance systems that bridge complex data logic with seamless digital experiences for real-world impact.
             </p>
             <div className="flex flex-wrap gap-4 pt-4">
                <a href="#projects" className="group relative px-8 py-4 font-semibold text-lg bg-emerald-500 text-[#090909] rounded-xl overflow-hidden hover:scale-[1.02] transition-all shadow-[0_0_20px_rgba(16,185,129,0.2)] hover:shadow-[0_0_40px_rgba(16,185,129,0.4)]">
