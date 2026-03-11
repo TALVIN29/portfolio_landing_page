@@ -30,3 +30,23 @@ env.js
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Private / Sensitive files
+*.pdf
+public/profile.jpg
+
+# Scratch / Debug output
+git_log.txt
+git_status.txt
+status.txt
+scripts.txt
+
+# Legacy build system (no longer used)
+package.json
+package-lock.json
+postcss.config.js
+tailwind.config.js
+tsconfig.json
+tsconfig.node.json
+vite.config.ts
+src/
