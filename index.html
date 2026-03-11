@@ -28,7 +28,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
     <!-- Custom Config -->
-    <script src="env.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -460,11 +459,10 @@
             submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
             submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Authenticating...';
 
-            // Apply endpoint from env
-            const endpoint = (window.ENV && window.ENV.FORMSPREE_ENDPOINT) ? window.ENV.FORMSPREE_ENDPOINT : '';
+            // Apply endpoint directly
+            const endpoint = 'https://formspree.io/f/xdawgenp';
 
             try {
-                if (!endpoint) throw new Error('API Endpoint Configuration Missing.');
 
                 const response = await fetch(endpoint, {
                     method: form.method || 'POST',
