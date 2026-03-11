@@ -28,6 +28,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 
     <!-- Custom Config -->
+    <script src="env.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -271,7 +272,7 @@
                         Secure Deployment Request
                     </h2>
                     
-                    <form id="deploy-form" onsubmit="handleDeployForm(event)" action="https://formspree.io/f/xdawgenp" method="POST" class="glass-panel p-8 rounded-xl shadow-2xl space-y-6">
+                    <form id="deploy-form" onsubmit="handleDeployForm(event)" method="POST" class="glass-panel p-8 rounded-xl shadow-2xl space-y-6">
                         <div>
                             <label for="objective" class="block text-sm font-mono text-slate-400 mb-2">01. What is your primary business objective or biggest bottleneck?</label>
                             <input type="text" id="objective" name="objective" required class="w-full bg-slate-900 border border-slate-700 rounded-md px-4 py-4 text-base text-slate-100 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors placeholder-slate-600 font-mono" placeholder="Briefly describe your main goal...">
@@ -459,9 +460,14 @@
             submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
             submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i> Authenticating...';
 
+            // Apply endpoint from env
+            const endpoint = (window.ENV && window.ENV.FORMSPREE_ENDPOINT) ? window.ENV.FORMSPREE_ENDPOINT : '';
+
             try {
-                const response = await fetch(form.action, {
-                    method: form.method,
+                if (!endpoint) throw new Error('API Endpoint Configuration Missing.');
+
+                const response = await fetch(endpoint, {
+                    method: form.method || 'POST',
                     body: new FormData(form),
                     headers: {
                         'Accept': 'application/json'
