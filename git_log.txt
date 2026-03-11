@@ -1,0 +1,10 @@
+﻿commit 285073e8e84374255e5d4e6482ac5046576fac0d
+Author: TALVIN29 <104349021+TALVIN29@users.noreply.github.com>
+Date:   Sat Mar 7 13:18:47 2026 +0800
+
+    Switch deployment strategy to gh-pages
+
+ .github/workflows/deploy.yml |  51 ------
+ package-lock.json            | 361 +++++++++++++++++++++++++++++++++++++++++++
+ package.json                 |   5 +-
+ 3 files changed, 365 insertions(+), 52 deletions(-)
