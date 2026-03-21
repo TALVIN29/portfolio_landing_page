@@ -1,0 +1,109 @@
+{
+    "pricing": [
+        {
+            "id": "quick-build",
+            "tierLabel": "Quick Build",
+            "price": "$750",
+            "priceRangeText": "-$1,500",
+            "features": [
+                "1-2 core automations",
+                "Standard integrations",
+                "5-7 business days"
+            ],
+            "themeClass": "none",
+            "accentClass": "blue",
+            "isOptional": false
+        },
+        {
+            "id": "full-build",
+            "tierLabel": "Full Build",
+            "price": "$2.5k",
+            "priceRangeText": "-$5k",
+            "features": [
+                "3-5 complex automations",
+                "Full technical docs",
+                "~2 weeks delivery"
+            ],
+            "themeClass": "none",
+            "accentClass": "blue",
+            "isOptional": false
+        },
+        {
+            "id": "sentinel-class",
+            "tierLabel": "Sentinel-Class",
+            "price": "$5k",
+            "priceRangeText": "-$8k",
+            "features": [
+                "Complex Rule Engines",
+                "Fintech/Compliance grade",
+                "Replaces $50K consultancy"
+            ],
+            "themeClass": "emerald",
+            "accentClass": "emerald",
+            "isOptional": false
+        },
+        {
+            "id": "continuous-automation",
+            "tierLabel": "Continuous Automation",
+            "price": "$500",
+            "priceRangeText": "/mo - $2k/mo",
+            "features": [
+                "1 QBR + Architecture Review",
+                "Priority for feature rollouts",
+                "Max 2 hours direct support"
+            ],
+            "themeClass": "blue",
+            "accentClass": "blue",
+            "isOptional": true
+        }
+    ],
+    "caseStudyMetrics": {
+        "rules": 28,
+        "hours": 15,
+        "accuracy": 99
+    },
+    "microCaseStudies": [
+        {
+            "badge": "",
+            "labelType": "MICRO-CASE STUDY",
+            "title": "Invoice Auto-Processor",
+            "description": "Saved an accounting team 12 hours/week. AI extracts PDF data and pushes to Airtable.",
+            "impactText": "Impact: $15K/yr value",
+            "price": "$750",
+            "priceSubtext": "(Quick Build)",
+            "ctaText": "Get Similar Built",
+            "ctaHref": "#diagnostic",
+            "ctaClass": "btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300",
+            "themeBorder": "",
+            "accentClass": "blue"
+        },
+        {
+            "badge": "POPULAR",
+            "labelType": "QUICK WIN",
+            "title": "Lead to CRM Pipeline",
+            "description": "Zero lost leads. Typeform → Enrichment → Supabase → Slack in seconds.",
+            "impactText": "DIY Template",
+            "price": "$29",
+            "priceSubtext": "",
+            "ctaText": "View Template",
+            "ctaHref": "https://gumroad.com/l/lead-to-crm",
+            "ctaClass": "btn-primary w-full py-3 flex items-center justify-center rounded text-sm font-mono text-white",
+            "themeBorder": "border-blue-500/30",
+            "accentClass": "blue"
+        },
+        {
+            "badge": "",
+            "labelType": "PREMIUM SYSTEM",
+            "title": "Compliance Pattern Kit",
+            "description": "The Sentinel V2 architectural pattern with full technical docs and schemas.",
+            "impactText": "Battle-Tested System",
+            "price": "$297",
+            "priceSubtext": "",
+            "ctaText": "View Pattern",
+            "ctaHref": "https://gumroad.com/l/compliance-pattern",
+            "ctaClass": "btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300",
+            "themeBorder": "",
+            "accentClass": "emerald"
+        }
+    ]
+}

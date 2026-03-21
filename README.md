@@ -22,19 +22,19 @@ This repository is governed exclusively by the specifications laid out in:
 | Styling | Tailwind CSS (CDN) | Utility-first, responsive Glassmorphism design system |
 | Typography | Google Fonts (Inter) | Clean sans-serif headings, Monospace technical accents |
 | Environment | Particles.js | Generative "Technocrat" node-based background |
-| Interactivity | Typed.js, CountUp.js | Micro-animations, value-based metric counters |
-| Lead Engine | Formspree via AJAX | Intercepted payload transmission without page redirection |
+| Interactivity | Typed.js, CountUp.js | Micro-animations, value-based metric counters (Deferred loading) |
+| Lead Engine | Supabase Edge Function | Payload transmission direct to DB with timestamped SLAs |
 | Alert System | SweetAlert2 | Premium UX completion states |
 
 ## 3. Deployment (The Zero-Maintenance Mandate)
 
 This system is built explicitly for rapid deployment and 100% independent execution. It utilizes the **5-check zero-maintenance audit**:
 
-1. **Runs unattended:** Formspree automatically routes inquiries via API.
-2. **No hardcoded dynamic APIs:** Fallbacks ensure the core UI never breaks.
+1. **Runs unattended:** Supabase Edge Functions actively records SLA timestamps and prompts downstream alert layers.
+2. **No hardcoded dynamic APIs:** All pricing parameters and client metrics are decoupled from HTML markup into a strict `data.json` store.
 3. **Auto-deployments:** Hooked to GitHub → Netlify pipelines directly.
-4. **Graceful degradation:** If `Particles.js` or `Typed.js` fail to load from CDN, standard CSS typography cleanly substitutes them.
-5. **Zero overhead:** Hosted exclusively within free-tier limitations (Netlify CDN).
+4. **Graceful degradation:** Native JS fallbacks and explicit `<noscript>` CSS ensure UI consistency even across heavy CDN blockages.
+5. **Zero overhead:** Hosted exclusively within free-tier limitations (Netlify CDN, Supabase).
 
 ## 4. Run Locally
 

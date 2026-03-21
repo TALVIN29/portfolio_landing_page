@@ -48,8 +48,9 @@ You are an expert Frontend Systems Architect. Build a single-page landing page f
     *   *Managed Ops (Optional):* $500 – $2,000/mo (Hosting + Proactive maintenance)
 *   *Note:* Emphasize that managed ops is convenience, not a dependency.
 
-**4. Products (Templates)**
-*   Showcase premium templates available via Gumroad (Prices from $29 to $497). E.g., Lead Capture, Invoice Auto-Processor, Compliance Kit.
+**4. Products (Templates) & Warranty**
+*   Showcase premium templates available via Gumroad (Prices from $29 to $497). Provide real Gumroad checkout links.
+*   Include explicit mention of the 30-Day Break/Fix Warranty as a major trust-building moat.
 
 **5. Portfolio & Case Studies (Proof)**
 *   Showcase "Case Study #1: 23-Node Transaction Monitoring Engine" (Sentinel V2).
@@ -57,20 +58,24 @@ You are an expert Frontend Systems Architect. Build a single-page landing page f
 *   Use CountUp.js to animate the metrics (e.g., hours saved, rows processed).
 
 **6. Lead Capture (The Diagnostic Engine)**
-*   **Form Integration:** Formspree (`method="POST"`).
+*   **SLA Terms:** "Diagnostic recommendation within 48 hours. Volume constrained to 8 hrs/week capacity."
+*   **Form Integration:** Supabase Edge Function (`https://<PROJECT_ID>.supabase.co/functions/v1/diagnostic-lead`).
 *   **Fields:** Name, Email, "What is currently broken?", "How many hours a week does this cost you?"
-*   **Submission UX:** Hijack standard form submission to prevent redirect. Use `fetch` API for AJAX submission. On success, use SweetAlert2 to show a premium success modal ("Diagnostic recommendation within 48 hours").
+*   **Submission UX:** Use `fetch` API for AJAX submission. Write lead to database with SLA timestamp to trigger Slack/Email alerts automatically. On success, use SweetAlert2 to show a premium success modal ("Diagnostic recommendation within 48 hours").
 
 **7. Footer**
 *   "AXELO — Designed to outlive its creator."
 *   Links to LinkedIn and GitHub. Clean, minimalistic copyright.
 
 ## 4. Data Integration
-*   **Contact Form:** Formspree. Ensure no redirect by using JS `fetch`.
-*   **API Security:** No secrets in the frontend. All scripts loaded via public CDNs.
+*   **Contact Form:** Supabase Edge Functions with timestamped SLAs.
+*   **API Security:** No secrets in the frontend. 
+*   **Decoupling:** Business variables (pricing, metrics) extracted to `data.json` instead of hardcoded DOM entries.
+*   **Agent Visibility:** Integrate `status.md` visible link to display builder-in-public hooks.
 
-## 5. Performance
-*   **Speed:** Load times under 1.5 seconds.
+## 5. Performance & Graceful Degradation
+*   **Speed:** Load times under 1.5 seconds. Scripts (AOS, Typed, Particles, CountUp, SweetAlert, tailwind) must use `defer` or compiled CSS. Replace runtime JS Tailwind compiler with a static `style.css`.
+*   **Resilience:** Apply `<noscript>` tags and AOS JS fallback opacity removal blocks for graceful degradation.
 *   **Responsiveness:** Perfect single-column stacking on mobile. Input fields at least 16px to prevent iOS zoom. Tap targets 48x48px minimum.
 *   **Animation Efficiency:** Particles.js configured to NOT overwhelm mobile devices (reduce density or frame rates on small screens).
 

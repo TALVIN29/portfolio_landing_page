@@ -6,13 +6,15 @@
 ## Blockers: None
 ## Decisions made: 
 - Transitioned project from "JD.core Dynamic Portfolio" to "AXELO Landing Page".
-- Locked PRD based on `AXELO_ARCHITECT.md` constraints and `AXELO_PLAYBOOK.md` pricing metrics.
-- Overrode default Formspree redirect using an AJAX fetch block with a SweetAlert2 modal for premium UX.
-- Integrated `Particles.js` for generative UI and `Typed.js` for the hero section to align with the required "Technocrat" aesthetic without sacrificing performance.
-- Verified Infrastructure Matrix: Free tiers cover production (Netlify + Formspree), zero secrets in frontend, graceful degradation observed.
-- Executed Red Team changes: Rebranded Managed Ops to Continuous Automation, strictly bounded SLA hours in PLAYBOOK, added Break/Fix Warranty and UAT revision limits to ARCHITECT, added funnel KPI math, and updated `index.html` to leverage micro-case studies instead of templates for better trust-building.
-## Human feedback: "push to git" (Code was pushed to GitHub repository after all strategic changes were made).
-## Resume context: The frontend application is fully built, and the business PLAYBOOK.md and ARCHITECT.md files have been secured against major operational and liability risks. Code was successfully pushed to GitHub. Awaiting UAT sign-off from Talvin.
+- Addressed Red Team's architectural violations: Extracted hardcoded pricing and metrics to `data.json`.
+- Addressed Red Team's performance failure: Migrated from Tailwind runtime JS to static `style.css` and added `defer` attributes to 6 external JS libraries.
+- Swapped Formspree for Supabase Edge Functions to integrate SLA timestamps and automated alerts.
+- Implemented Graceful Degradation: Added AOS JS fallback and `<noscript>` tags.
+- Added 30-Day Break/Fix Warranty mentions and `status.md` Agent Visibility hooks.
+- Updated SLA clauses with capacity volume constraints (8 hrs/wk in Month 0-1).
+- Inserted actual Gumroad links for premium templates.
+## Human feedback: Red Team Review identifying 3 Biggest Risks (Hardcoded Data, Lighthouse Targets, Formspree Bottleneck). Fixes actively applied.
+## Resume context: Updating the frontend structural integrity and documentation based on the architectural constraints required to decouple data, guarantee mobile Lighthouse speeds, enforce SLAs via Supabase, and maintain robust graceful degradation logic.
 
 ---
 
@@ -26,18 +28,19 @@
 - [x] PRD Locked.
 
 ### Phase 2: Infrastructure Check
-- [x] Verify free tier viability (Netlify + GitHub + Formspree are all free tier compliant).
+- [x] Verify free tier viability (Netlify + GitHub + Supabase Edge Functions).
 - [x] Verify no API keys or secrets are exposed in the frontend code.
-- [x] Verify graceful degradation (fallback UI if CDNs or Scripts fail).
+- [x] Verify graceful degradation (fallback UI if CDNs or Scripts fail; AOS fallback JS).
+- [x] Extract dynamic variables to `data.json` to prevent DOM tight coupling.
 - [x] Tech stack confirmed in `PRD.md`.
 
 ### Phase 3: Build & Executive Protocol (Arthur)
-- [x] Structure `index.html` boilerplate.
-- [x] Implement UI sections based on PRD: Hero, Philosophy, Pricing, Portfolio, Templates, Diagnostic Form.
-- [x] Implement interactivity: Particles.js, CountUp.js, Typed.js, AOS.
-- [x] Intercept Formspree submission with AJAX to prevent page redirect natively.
-- [x] Enforce modular sub-workflow logic within the single file constraints (organized blocks).
-- [x] *Arthur Protocol Verification:* Checked for hallucinated endpoints, ensured all libraries are valid, validated responsive design constraints.
+- [x] Sub-workflow: Create `data.json` and adjust `index.html` to dynamically fetch data (Pricing, Case Studies).
+- [x] Sub-workflow: Compile Tailwind static CSS to overcome heavy runtime rendering via JS inline.
+- [x] UI & Lead capture overhaul: Redirect form to Supabase Edge, append SLA limits, add JS/CSS <noscript> graceful dropbacks.
+- [x] Include references to 30-Day Break/Fix warranty.
+- [x] Inject `defer` onto all external JS files.
+- [x] *Arthur Protocol Verification:* Checked component decoupling, tested load speeds via static CSS, ensured absolute mobile performance safety.
 
 ### Phase 4: UAT (User Acceptance Testing)
 - [x] Push code to GitHub branch.
