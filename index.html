@@ -318,16 +318,17 @@
                     <div class="mb-10">
                         <label class="block text-xs font-mono text-blue-400 mb-2 tracking-wider">METRIC // HOURS LOST PER WEEK</label>
                         <div class="relative">
-                            <input type="number" name="hours_lost" min="0" required class="w-full bg-slate-900/80 border border-slate-700/80 hover:border-blue-500/50 focus:border-blue-500 rounded-lg pl-12 pr-4 py-3 text-slate-100 focus:outline-none transition-colors" placeholder="15">
+                            <input type="number" name="hours_lost" min="0" max="168" required class="w-full bg-slate-900/80 border border-slate-700/80 hover:border-blue-500/50 focus:border-blue-500 rounded-lg pl-12 pr-4 py-3 text-slate-100 focus:outline-none transition-colors" placeholder="15">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-mono"><i class="fa-regular fa-clock"></i></span>
                         </div>
                     </div>
 
+                    <!-- Honeypot Field -->
+                    <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
                     <button type="submit" id="submit-btn" class="w-full btn-primary font-mono font-bold py-4 rounded-lg flex justify-center items-center gap-3 text-base">
                         <span>INITIATE DIAGNOSTIC</span> <i class="fa-solid fa-arrow-right list-none" aria-hidden="true"></i>
                     </button>
-                    <!-- Supabase SLA Tracking -->
-                    <input type="hidden" name="slaTimestamp" id="slaTimestamp" value="" />
                 </form>
             </div>
         </section>
@@ -384,78 +385,126 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Load Data
-            fetch('data.json')
-                .then(res => res.json())
-                .then(data => {
-                    // Render Pricing
-                    const pricingContainer = document.getElementById('pricing-container');
-                    if (pricingContainer) {
-                        data.pricing.forEach((tier, i) => {
-                            const delay = i * 100;
-                            const isOptionalLabel = tier.isOptional ? `<div class="absolute -top-3 left-8 bg-${tier.accentClass}-600 text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full">Optional</div>` : '';
-                            const borderStyle = tier.themeClass !== 'none' ? `border-${tier.themeClass}-500/50 shadow-[0_0_30px_rgba(16,185,129,0.1)]` : '';
-                            
-                            const featureItems = tier.features.map(f => `<li><i class="fa-solid fa-check text-${tier.accentClass}-500 mr-2"></i> ${f}</li>`).join('');
+            // Load Data with Cache, Timeout, and Fallback
+            const renderData = (data) => {
+                // Render Pricing
+                const pricingContainer = document.getElementById('pricing-container');
+                if (pricingContainer) {
+                    pricingContainer.innerHTML = '';
+                    data.pricing.forEach((tier, i) => {
+                        const delay = i * 100;
+                        const isOptionalLabel = tier.isOptional ? `<div class="absolute -top-3 left-8 bg-${tier.accentClass}-600 text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1 rounded-full">Optional</div>` : '';
+                        const borderStyle = tier.themeClass !== 'none' ? `border-${tier.themeClass}-500/50 shadow-[0_0_30px_rgba(16,185,129,0.1)]` : '';
+                        
+                        const featureItems = tier.features.map(f => `<li><i class="fa-solid fa-check text-${tier.accentClass}-500 mr-2"></i> ${f}</li>`).join('');
 
-                            pricingContainer.innerHTML += `
-                            <div class="glass-panel p-8 rounded-2xl flex flex-col relative ${borderStyle}" data-aos="fade-up" data-aos-delay="${delay}">
-                                ${isOptionalLabel}
-                                <h3 class="text-${tier.accentClass}-400 font-mono text-sm mb-4 ${tier.isOptional ? 'border-t border-transparent pt-2' : ''}">${tier.tierLabel}</h3>
-                                <div class="mb-6 border-b ${tier.accentClass === 'emerald' ? 'border-emerald-900/50' : 'border-slate-700/50'} pb-6">
-                                    <span class="text-3xl font-bold text-slate-50">${tier.price}</span>
-                                    <span class="text-slate-500 text-sm text-nowrap">${tier.priceRangeText}</span>
-                                </div>
-                                <ul class="text-sm text-slate-400 space-y-3 mb-8 flex-1">
-                                    ${featureItems}
-                                </ul>
+                        pricingContainer.innerHTML += `
+                        <div class="glass-panel p-8 rounded-2xl flex flex-col relative ${borderStyle}" data-aos="fade-up" data-aos-delay="${delay}">
+                            ${isOptionalLabel}
+                            <h3 class="text-${tier.accentClass}-400 font-mono text-sm mb-4 ${tier.isOptional ? 'border-t border-transparent pt-2' : ''}">${tier.tierLabel}</h3>
+                            <div class="mb-6 border-b ${tier.accentClass === 'emerald' ? 'border-emerald-900/50' : 'border-slate-700/50'} pb-6">
+                                <span class="text-3xl font-bold text-slate-50">${tier.price}</span>
+                                <span class="text-slate-500 text-sm text-nowrap">${tier.priceRangeText}</span>
                             </div>
-                            `;
-                        });
-                    }
+                            <ul class="text-sm text-slate-400 space-y-3 mb-8 flex-1">
+                                ${featureItems}
+                            </ul>
+                        </div>
+                        `;
+                    });
+                }
 
-                    // Render Micro Case Studies
-                    const mcsContainer = document.getElementById('micro-case-studies-container');
-                    if (mcsContainer) {
-                        data.microCaseStudies.forEach((study, i) => {
-                            const delay = i * 100;
-                            const badgeStr = study.badge ? `<div class="absolute top-0 right-0 bg-${study.accentClass}-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl tracking-wider">${study.badge}</div>` : '';
-                            
-                            mcsContainer.innerHTML += `
-                            <div class="glass-panel p-8 rounded-2xl flex flex-col text-left relative ${study.themeBorder}" data-aos="fade-up" data-aos-delay="${delay}">
-                                ${badgeStr}
-                                <div class="text-${study.accentClass}-400 text-xs font-mono font-bold mb-3 tracking-wider">${study.labelType}</div>
-                                <h3 class="text-xl font-bold text-slate-50 mb-2">${study.title}</h3>
-                                <p class="text-sm text-slate-400 mb-4">${study.description}</p>
-                                <div class="mb-8 mt-auto border-t ${study.accentClass === 'emerald' ? 'border-emerald-900/30' : 'border-slate-800'} pt-4">
-                                    <span class="text-slate-500 text-sm block mb-1">${study.impactText}</span>
-                                    <span class="text-xl font-bold text-white">${study.price}</span>
-                                    ${study.priceSubtext ? `<span class="text-xs text-slate-500 ml-1">${study.priceSubtext}</span>` : ''}
-                                </div>
-                                <a href="${study.ctaHref}" class="${study.ctaClass}">${study.ctaText}</a>
+                // Render Micro Case Studies
+                const mcsContainer = document.getElementById('micro-case-studies-container');
+                if (mcsContainer) {
+                    mcsContainer.innerHTML = '';
+                    data.microCaseStudies.forEach((study, i) => {
+                        const delay = i * 100;
+                        const badgeStr = study.badge ? `<div class="absolute top-0 right-0 bg-${study.accentClass}-500 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl rounded-tr-xl tracking-wider">${study.badge}</div>` : '';
+                        
+                        mcsContainer.innerHTML += `
+                        <div class="glass-panel p-8 rounded-2xl flex flex-col text-left relative ${study.themeBorder}" data-aos="fade-up" data-aos-delay="${delay}">
+                            ${badgeStr}
+                            <div class="text-${study.accentClass}-400 text-xs font-mono font-bold mb-3 tracking-wider">${study.labelType}</div>
+                            <h3 class="text-xl font-bold text-slate-50 mb-2">${study.title}</h3>
+                            <p class="text-sm text-slate-400 mb-4">${study.description}</p>
+                            <div class="mb-8 mt-auto border-t ${study.accentClass === 'emerald' ? 'border-emerald-900/30' : 'border-slate-800'} pt-4">
+                                <span class="text-slate-500 text-sm block mb-1">${study.impactText}</span>
+                                <span class="text-xl font-bold text-white">${study.price}</span>
+                                ${study.priceSubtext ? `<span class="text-xs text-slate-500 ml-1">${study.priceSubtext}</span>` : ''}
                             </div>
-                            `;
-                        });
-                    }
+                            <a href="${study.ctaHref}" class="${study.ctaClass}">${study.ctaText}</a>
+                        </div>
+                        `;
+                    });
+                }
 
-                    // Initialize AOS AFTER DOM elements are rendered
-                    if (typeof AOS !== 'undefined') {
-                        AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
-                    }
+                // Initialize AOS AFTER DOM elements are rendered
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
+                }
 
-                    // CountUp Execution
-                    if (typeof countUp !== 'undefined') {
-                        initCountUp('count-rules', data.caseStudyMetrics.rules, { prefix: '', suffix: '' });
-                        initCountUp('count-hours', data.caseStudyMetrics.hours, { prefix: '', suffix: '+' });
-                        initCountUp('count-accuracy', data.caseStudyMetrics.accuracy, { prefix: '', suffix: '' });
+                // CountUp Execution
+                if (typeof countUp !== 'undefined') {
+                    initCountUp('count-rules', data.caseStudyMetrics.rules, { prefix: '', suffix: '' });
+                    initCountUp('count-hours', data.caseStudyMetrics.hours, { prefix: '', suffix: '+' });
+                    initCountUp('count-accuracy', data.caseStudyMetrics.accuracy, { prefix: '', suffix: '' });
+                }
+            };
+
+            const loadData = async () => {
+                const CACHE_KEY = 'axelo_data';
+                const CACHE_TTL = 7200000; // 2 hours in ms
+                const cached = sessionStorage.getItem(CACHE_KEY);
+                
+                if (cached) {
+                    try {
+                        const parsed = JSON.parse(cached);
+                        if (Date.now() - parsed.timestamp < CACHE_TTL) {
+                            renderData(parsed.data);
+                            return;
+                        }
+                    } catch (e) {
+                        sessionStorage.removeItem(CACHE_KEY);
                     }
-                })
-                .catch(err => {
-                    console.error("Failed to load business variables", err);
-                    if (typeof AOS !== 'undefined') {
-                        AOS.init({ once: true, offset: 50, duration: 800, easing: 'ease-out-cubic' });
-                    }
-                });
+                }
+
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 1500);
+
+                try {
+                    const res = await fetch('data.json', { signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!res.ok) throw new Error('Fetch status not ok');
+                    const data = await res.json();
+                    
+                    sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+                        timestamp: Date.now(),
+                        data: data
+                    }));
+                    
+                    renderData(data);
+                } catch (err) {
+                    console.warn("Failed to load data.json, using fallback:", err);
+                    const fallbackData = {
+                        "pricing": [
+                            {"id":"quick-build","tierLabel":"Quick Build","price":"$750","priceRangeText":"-$1,500","features":["1-2 core automations","Standard integrations","5-7 business days","Anchored to 5-10% value"],"themeClass":"none","accentClass":"blue","isOptional":false},
+                            {"id":"full-build","tierLabel":"Full Build","price":"$2.5k","priceRangeText":"-$5k","features":["3-5 complex automations","Full technical docs","~2 weeks delivery"],"themeClass":"none","accentClass":"blue","isOptional":false},
+                            {"id":"sentinel-class","tierLabel":"Sentinel-Class","price":"$5k","priceRangeText":"-$8k","features":["Complex Rule Engines","Fintech/Compliance grade","Replaces $50K consultancy"],"themeClass":"emerald","accentClass":"emerald","isOptional":false},
+                            {"id":"continuous-automation","tierLabel":"Continuous Automation","price":"$500","priceRangeText":"/mo - $2k/mo","features":["1 QBR + Architecture Review","Priority for feature rollouts","Max 2 hours direct support"],"themeClass":"blue","accentClass":"blue","isOptional":true}
+                        ],
+                        "caseStudyMetrics": {"rules":28,"hours":15,"accuracy":99},
+                        "microCaseStudies": [
+                            {"badge":"","labelType":"MICRO-CASE STUDY","title":"Invoice Auto-Processor","description":"Saved an accounting team 12 hours/week. AI extracts PDF data and pushes to Airtable.","impactText":"Impact: $15K/yr value","price":"$750","priceSubtext":"(Quick Build)","ctaText":"Get Similar Built","ctaHref":"#diagnostic","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"blue"},
+                            {"badge":"POPULAR","labelType":"QUICK WIN","title":"Lead to CRM Pipeline","description":"Zero lost leads. Typeform → Enrichment → Supabase → Slack in seconds.","impactText":"DIY Template","price":"$29","priceSubtext":"","ctaText":"View Template","ctaHref":"https://gumroad.com/l/lead-to-crm","ctaClass":"btn-primary w-full py-3 flex items-center justify-center rounded text-sm font-mono text-white","themeBorder":"border-blue-500/30","accentClass":"blue"},
+                            {"badge":"","labelType":"PREMIUM SYSTEM","title":"Compliance Pattern Kit","description":"The Sentinel V2 architectural pattern with full technical docs and schemas.","impactText":"Battle-Tested System","price":"$297","priceSubtext":"","ctaText":"View Pattern","ctaHref":"https://gumroad.com/l/compliance-pattern","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"emerald"}
+                        ]
+                    };
+                    renderData(fallbackData);
+                }
+            };
+            
+            loadData();
 
             // 2. Typed.js Initialization
             const typed = new Typed('#typed', {
@@ -552,8 +601,6 @@
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
-                document.getElementById('slaTimestamp').value = new Date().toISOString();
                 
                 // Form Loading State
                 submitBtn.disabled = true;

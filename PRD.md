@@ -42,11 +42,11 @@ You are an expert Frontend Systems Architect. Build a single-page landing page f
 **3. Services & Pricing (Transparent Matrix)**
 *   **Header:** Transparent, Value-Based Pricing (5-10% of annual value created).
 *   **Service Cards:**
-    *   *Quick Build:* $750 – $1,500 (1-2 automations, 5-7 days)
+    *   *Quick Build:* $750 – $1,500 (1-2 automations, 5-7 days, anchored to 5-10% value)
     *   *Full Build:* $2,500 – $5,000 (3-5 automations + docs, 2 weeks)
     *   *Sentinel-Class:* $5,000 – $8,000 (Complex/Fintech rules engines, 3-4 weeks)
-    *   *Managed Ops (Optional):* $500 – $2,000/mo (Hosting + Proactive maintenance)
-*   *Note:* Emphasize that managed ops is convenience, not a dependency.
+    *   *Continuous Automation (Optional):* $500 – $2,000/mo (Hosting + Proactive maintenance)
+*   *Note:* Emphasize that continuous automation is convenience, not a dependency.
 
 **4. Products (Templates) & Warranty**
 *   Showcase premium templates available via Gumroad (Prices from $29 to $497). Provide real Gumroad checkout links.
@@ -59,7 +59,7 @@ You are an expert Frontend Systems Architect. Build a single-page landing page f
 
 **6. Lead Capture (The Diagnostic Engine)**
 *   **SLA Terms:** "Diagnostic recommendation within 48 hours. Volume constrained to 8 hrs/week capacity."
-*   **Form Integration:** Supabase Edge Function (`https://<PROJECT_ID>.supabase.co/functions/v1/diagnostic-lead`).
+*   **Form Integration:** Supabase Edge Function (`https://<PROJECT_ID>.supabase.co/functions/v1/submit-diagnostic`).
 *   **Fields:** Name, Email, "What is currently broken?", "How many hours a week does this cost you?"
 *   **Submission UX:** Use `fetch` API for AJAX submission. Write lead to database with SLA timestamp to trigger Slack/Email alerts automatically. On success, use SweetAlert2 to show a premium success modal ("Diagnostic recommendation within 48 hours").
 
