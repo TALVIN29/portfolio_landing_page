@@ -1,4 +1,5 @@
 # PRD: AXELO Landing Page
+**Version:** 4.2 | Last updated: 2026-03-21
 
 ## 1. System Instructions
 You are an expert Frontend Systems Architect. Build a single-page landing page for **AXELO**. The page must be a strictly single `index.html` file, deployed on Netlify directly via GitHub. It serves as a portfolio, lead generation tool, and brand statement.
@@ -58,10 +59,15 @@ You are an expert Frontend Systems Architect. Build a single-page landing page f
 *   Use CountUp.js to animate the metrics (e.g., hours saved, rows processed).
 
 **6. Lead Capture (The Diagnostic Engine)**
-*   **SLA Terms:** "Diagnostic recommendation within 48 hours. Volume constrained to 8 hrs/week capacity."
+*   **SLA Terms:** "Capacity constrained to ensure premium delivery. Current SLA: 48 hours."
 *   **Form Integration:** Supabase Edge Function (`https://<PROJECT_ID>.supabase.co/functions/v1/submit-diagnostic`).
 *   **Fields:** Name, Email, "What is currently broken?", "How many hours a week does this cost you?"
-*   **Submission UX:** Use `fetch` API for AJAX submission. Write lead to database with SLA timestamp to trigger Slack/Email alerts automatically. On success, use SweetAlert2 to show a premium success modal ("Diagnostic recommendation within 48 hours").
+*   **Submission UX:** Use `fetch` API for AJAX submission. Write lead to DB with server-generated SLA timestamp. On success, fire SweetAlert2 premium success modal.
+*   **Notification Channel:** Slack Incoming Webhook (free forever). On every successful DB insert, the Edge Function calls `SLACK_WEBHOOK_URL` (Supabase secret, never exposed to frontend) with the following payload fields: Name, Email, Hours Lost, Problem summary, UTM source, 48hr SLA deadline timestamp. This is the ONLY mechanism Talvin uses to monitor new leads — no manual DB checks required.
+*   **Rate Limiting:** Max 3 submissions per IP per 24 hours enforced server-side. Client receives HTTP 429 with branded SweetAlert error.
+*   **Spam Protection:** Server-side honeypot field check. Silent 200 returned for bot submissions (no enumeration risk).
+*   **UTM Attribution:** `utm_source`, `utm_medium`, `utm_campaign` parsed from URL, cached in sessionStorage, appended to FormData, written to `leads` table. Slack message includes source channel when present.
+*   **Draft Rescue:** `localStorage` persists textarea content on 500ms debounce. Restored on page reload. Cleared on successful submission.
 
 **7. Footer**
 *   "AXELO — Designed to outlive its creator."
@@ -83,5 +89,9 @@ You are an expert Frontend Systems Architect. Build a single-page landing page f
 *   100% single-file `index.html` delivery.
 *   0 console errors on load.
 *   Lighthouse Performance Score > 90.
-*   Formspree AJAX submission returns success modal without page navigation.
+*   Supabase Edge Function AJAX submission returns SweetAlert2 success modal without page navigation.
 *   Particles.js, Typed.js, AOS, and CountUp.js successfully execute on page render.
+*   Slack notification fires within 5 seconds of form submission. Payload includes: Name, Email, Hours Lost, Problem, UTM source (if present), 48hr SLA deadline.
+*   Rate limiter returns HTTP 429 after 3 submissions from same IP within 24 hours.
+*   `source_ip` and `created_at` columns populated on every `leads` row.
+*   `utm_*` columns populated when URL contains UTM parameters.

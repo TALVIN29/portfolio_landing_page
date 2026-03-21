@@ -87,7 +87,43 @@ npx tailwindcss -i ./src/input.css -o ./style.css --minify
 
 **Deployment note:** Only `style.css` is committed to the repo. The `node_modules/` directory is `.gitignore`-d. Netlify does **not** run a build command — it serves the pre-compiled file directly.
 
-## 6. State of Work
+## 6. Lead Notification Setup (Slack Webhook — Free Forever)
+
+Every form submission fires a Slack message to your phone within seconds. **No manual DB monitoring required.**
+
+The notification code is already live in the Edge Function. You only need to complete this one-time setup:
+
+### Step 1 — Create a Slack Incoming Webhook
+1. Go to [api.slack.com/apps](https://api.slack.com/apps) → **Create New App** → **From scratch**
+2. Name it `AXELO Leads` → select your workspace → **Create App**
+3. In the left sidebar: **Incoming Webhooks** → toggle **Activate Incoming Webhooks** → ON
+4. Click **Add New Webhook to Workspace** → select a channel (e.g. `#leads` or just DM yourself) → **Allow**
+5. Copy the webhook URL — it looks like: `https://hooks.slack.com/services/T.../B.../...`
+
+### Step 2 — Add to Supabase as a Secret
+1. Supabase Dashboard → your project → **Settings** → **Edge Functions** → **Secrets**
+2. Click **Add new secret**
+3. Name: `SLACK_WEBHOOK_URL`
+4. Value: paste the webhook URL from Step 1
+5. Click **Save**
+
+### Step 3 — Verify
+Submit a test form on your live site. Within 5 seconds you should receive a Slack message containing:
+```
+🚨 New AXELO Diagnostic Request 🚨
+
+Name: [name]
+Email: [email]
+Hours Lost: [n] hrs/wk
+Problem: [description]
+Source: [utm_source / utm_medium / utm_campaign]  ← only if UTM params present
+
+48hr SLA Deadline: [timestamp]
+```
+
+> **Zero-Maintenance Note:** The `SLACK_WEBHOOK_URL` is stored as a Supabase server secret — never in the frontend or GitHub. If you rotate the webhook URL, update the secret in Supabase Dashboard only. No code changes, no redeployment.
+
+## 7. State of Work
 
 Track ongoing developmental phases and the Arthur Protocol validation logic within the `progress_plan.md` framework.
 

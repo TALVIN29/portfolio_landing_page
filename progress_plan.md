@@ -1,9 +1,9 @@
 # Progress: AXELO Landing Page
-## Status: COMPLETE
-## Last checkpoint: Supabase Edge Function Deployed and Payload Captured via UAT validation.
+## Status: IN_PROGRESS
+## Last checkpoint: Red Team Audit v4.1 remediation complete. Notification channel setup pending.
 ## Last updated: 2026-03-21
-## Next action: None / Launch ready.
-## Blockers: None
+## Next action: Configure `SLACK_WEBHOOK_URL` in Supabase environment variables to activate lead notifications.
+## Blockers: None — code is live. One env var to set.
 ## Decisions made: 
 - Transitioned project from "JD.core Dynamic Portfolio" to "AXELO Landing Page".
 - Addressed Red Team's architectural violations: Extracted hardcoded pricing and metrics to `data.json`.
@@ -11,11 +11,18 @@
 - Swapped Formspree for Supabase Edge Functions to integrate SLA timestamps and automated alerts.
 - Implemented Graceful Degradation: Added AOS JS fallback and `<noscript>` tags.
 - Added 30-Day Break/Fix Warranty mentions and `status.md` Agent Visibility hooks.
-- Updated SLA clauses with capacity volume constraints (8 hrs/wk in Month 0-1).
-- Inserted actual Gumroad links for premium templates.
-- **PROTOTYPED & SHIPPED:** Scaffolding the `submit-diagnostic` Supabase Edge Function to automate form submissions natively within the AXELO backend. (Option A Selected).
-## Human feedback: UAT image verified. The `leads` table actively intercepts payload configurations accurately.
-## Resume context: The frontend structural integrity has been heavily audited and decoupled. The backend API is successfully deployed to Supabase securely without exposing `SUPABASE_SERVICE_ROLE_KEY` to the public DOM. Project is complete.
+- **RED TEAM AUDIT v4.1 REMEDIATION:** All 6 audit findings addressed:
+  1. IP-based rate limiting (3/24hr) in Edge Function — LIVE
+  2. Invoice Auto-Processor repriced $750→$49, CTA→Gumroad — LIVE
+  3. Internal capacity copy sanitised → professional SLA copy — LIVE
+  4. UTM attribution mechanics implemented (parse→cache→write to DB) — LIVE
+  5. CSS build instructions added to README.md — LIVE
+  6. localStorage draft rescue on textarea — LIVE
+- **NOTIFICATION DECISION:** Slack Incoming Webhook selected per ARCHITECT.md Infrastructure Decision Matrix — free forever, zero new code, already coded in Edge Function, single env var required. Rationale: PLAYBOOK.md §8 (Zero Maintenance Mandate), ARCHITECT.md Rule 9 (Simpler solution first).
+- SLA copy updated to: "Capacity constrained to ensure premium delivery. Current SLA: 48 hours."
+- `sla_timestamp` generation moved server-side (prevents client spoofing).
+## Human feedback: UAT confirmed. Test submission shows `source_ip: 161.142.152.165` populated — rate limiting active. Slack notification pending env var setup.
+## Resume context: Stack is fully hardened. Edge Function+DB is live. The ONLY outstanding task is setting SLACK_WEBHOOK_URL in Supabase secrets → notification system activates instantly with zero code changes.
 
 ---
 
@@ -26,40 +33,47 @@
 - [x] Draft `PRD.md` aligning with `AXELO_PLAYBOOK.md` (Brand, Pricing).
 - [x] Define exact tech stack and aesthetic requirements.
 - [x] Define measurable success criteria (e.g., Load time, Lighthouse score, single-file structure).
-- [x] PRD Locked.
+- [x] PRD Locked (v4.2 — notification channel, rate limiting, UTM, draft rescue all specced).
 
 ### Phase 2: Infrastructure Check
-- [x] Verify free tier viability (Netlify + GitHub + Supabase Edge Functions).
+- [x] Verify free tier viability (Netlify + GitHub + Supabase Edge Functions + Slack Webhooks — all free).
 - [x] Verify no API keys or secrets are exposed in the frontend code.
 - [x] Verify graceful degradation (fallback UI if CDNs or Scripts fail; AOS fallback JS).
 - [x] Extract dynamic variables to `data.json` to prevent DOM tight coupling.
 - [x] Tech stack confirmed in `PRD.md`.
+- [x] Rate limiting: 3 submissions/IP/24hr — server-side, no frontend cost.
+- [x] Notification: Slack Incoming Webhook — free forever, no paid tier.
 
-### Phase 3: Build & Executive Protocol (Arthur)
+### Phase 3: Build & Arthur Protocol
 - [x] Sub-workflow: Create `data.json` and adjust `index.html` to dynamically fetch data (Pricing, Case Studies).
 - [x] Sub-workflow: Compile Tailwind static CSS to overcome heavy runtime rendering via JS inline.
-- [x] UI & Lead capture overhaul: Redirect form to Supabase Edge, append SLA limits, add JS/CSS <noscript> graceful dropbacks.
+- [x] UI & Lead capture overhaul: Redirect form to Supabase Edge, SLA copy, JS/CSS `<noscript>` graceful dropbacks.
 - [x] Include references to 30-Day Break/Fix warranty.
 - [x] Inject `defer` onto all external JS files.
-- [x] *Arthur Protocol Verification:* Checked component decoupling, tested load speeds via static CSS, ensured absolute mobile performance safety.
+- [x] Red Team Audit v4.1: Rate limiting, pricing parity, copy sanitisation, UTM attribution, draft rescue.
+- [x] DB schema: `source_ip`, `utm_*`, `created_at` columns + performance index — migrated live.
+- [ ] **Slack Webhook: Set `SLACK_WEBHOOK_URL` in Supabase Dashboard → Settings → Edge Functions → Secrets.**
 
 ### Phase 4: UAT (User Acceptance Testing)
-- [x] Push code to GitHub branch.
-- [x] Deploy to Netlify staging environment.
-- [x] Talvin (Client/Principal) reviews the live site.
-- [x] Address any UI/UX issues or bugs reported.
-- [x] Sign-off received (Payload functionally caught by Supabase `leads` row).
+- [x] Push code to GitHub (commit 25235cd).
+- [x] Deploy to Netlify (auto-deployed on push).
+- [x] Talvin tests form submission — row captured in `leads` with `source_ip` populated.
+- [ ] **Talvin tests form submission with Slack webhook active — notification fires to phone within 5 seconds.**
 
 ### Phase 5: Zero-Maintenance Audit & Deployment
-- [x] Confirm system runs unattended (Edge functions auto-track SLA).
-- [x] Confirm Auto-deploy on push (GitHub → Netlify).
-- [x] Final Handover Brief and Architecture documentation generated.
+- [x] Confirm system runs unattended (Edge Functions auto-track SLA).
+- [x] Confirm Auto-deploy on push (GitHub → Netlify pipeline).
+- [x] Rate limiter blocks abuse (3/IP/24hr, HTTP 429).
+- [x] UTM attribution writes to DB automatically.
+- [ ] **Confirm Slack notification fires on every lead — zero manual DB monitoring required.**
+- [ ] Final README.md updated with Slack setup instructions.
 
 ---
 
 ## PILLAR 2: Delivery Checklist
-- [x] `PRD.md` (locked, client-approved equivalent).
-- [x] `index.html` (Deployed and finalized layout).
+- [x] `PRD.md` (v4.2 — locked with all audit remediations and notification spec).
+- [x] `index.html` (Deployed: rate limiting UX, UTM, draft rescue, corrected pricing).
 - [x] `progress_plan.md` reflects current status.
-- [x] Security sign-off: Client owns all API keys and credentials.
-- [x] Architecture README built specifically for AXELO.
+- [x] Security sign-off: `SLACK_WEBHOOK_URL` stored as Supabase secret — never in frontend/GitHub.
+- [x] Architecture README built specifically for AXELO (CSS build instructions added).
+- [ ] **Slack notification confirmed live via UAT.**
