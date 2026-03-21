@@ -39,7 +39,7 @@
 - [x] *Arthur Protocol Verification:* Checked for hallucinated endpoints, ensured all libraries are valid, validated responsive design constraints.
 
 ### Phase 4: UAT (User Acceptance Testing)
-- [ ] Push code to GitHub branch.
+- [x] Push code to GitHub branch.
 - [ ] Deploy to Netlify staging environment.
 - [ ] Talvin (Client/Principal) reviews the live site.
 - [ ] Address any UI/UX issues or bugs reported.
@@ -56,5 +56,5 @@
 - [x] `PRD.md` (locked, client-approved equivalent).
 - [x] `index.html` (Deployed and finalized layout).
 - [x] `progress_plan.md` reflects current status.
-- [ ] Security sign-off: Client owns all API keys and credentials.
-- [ ] Architecture README built specifically for AXELO (Drafting next).
+- [x] Security sign-off: Client owns all API keys and credentials.
+- [x] Architecture README built specifically for AXELO.

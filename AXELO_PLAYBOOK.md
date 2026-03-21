@@ -46,7 +46,7 @@ Not a passive consultancy waiting for clients. Not a template shop selling gener
 | 1. FREE | Public diagnosis (LinkedIn, Dev.to, Reddit) | $0 | Marketing engine |
 | 2. ENTRY | Premium templates on Gumroad | $29–$99 | Passive |
 | 3. CORE | Diagnostic + adapted implementation | $750–$8,000 | Active |
-| 4. RECURRING | Managed operations (host + maintain) | $500–$2,000/mo | Cash cow |
+| 4. RECURRING | Continuous Automation (vCFO of Ops) | $500–$2,000/mo | Cash cow |
 
 ### The Flywheel
 
@@ -125,7 +125,7 @@ Custom implementation, premium templates with full docs/video, managed hosting, 
 | Quick Build (1–2 automations) | $750–$1,500 | 5–7 business days | Saves 5–10 hrs/week = $13K–$26K/year. Priced at 5–10% of annual value. |
 | Full Build (3–5 automations + minimum 10-page docs) | $2,500–$5,000 | 2 weeks | Saves 10–20 hrs/week = $26K–$52K/year. Priced at 5–10% of annual value. |
 | Sentinel-Class Build | $5,000–$8,000 | 3–4 weeks | Compliance/fintech premium. Replaces $50K–$100K consultancy. |
-| Managed Operations | $500–$2,000/mo | Ongoing | Optional upgrade — client's system runs without this. |
+| Continuous Automation | $500–$2,000/mo | Ongoing | 1 QBR, max 2 hrs support/mo + 1 architecture review/quarter. |
 
 ### Pricing Rules
 - **ALWAYS price at 5–10% of the annual value the automation creates for the client.**
@@ -135,10 +135,10 @@ Custom implementation, premium templates with full docs/video, managed hosting, 
 ### Why People Pay When Free Exists
 Free template = raw JSON, figure it out. Paid = full docs + video walkthrough + test cases + AXELO quality stamp + 30-minute to production. The difference isn't the code. It's the confidence and speed.
 
-### Managed Operations Clarification
-Managed Operations is an OPTIONAL SERVICE LAYER — not a dependency. The client's system works without it. "Zero-maintenance" applies to what we build; Managed Ops is convenience and insurance.
+### Continuous Automation (vCFO of Ops) Clarification
+Continuous Automation is an OPTIONAL EVOLUTION LAYER — not a dependency. The client's system works without it. "Zero-maintenance" applies to what we build; Continuous Automation focuses on continuous improvement: 1 Quarterly Business Review (QBR), priority bandwidth for Phase-2 feature rollouts, and proactive monitoring for scaling limits. Included: Max 2 hours of direct support/month + 1 architecture review call/quarter.
 
-When a managed client wants to leave: AXELO provides a migration guide, exports all configs, and hands over all documentation within 5 business days. Client owns everything. Exit is clean.
+When a continuous automation client wants to leave: AXELO provides a migration guide, exports all configs, and hands over all documentation within 5 business days. Client owns everything. Exit is clean.
 
 Sales channels: Gumroad (templates), direct invoice (services), Lemon Squeezy (alternative to Gumroad).
 
@@ -161,6 +161,7 @@ Content (broken process diagnosis)
 ```
 
 ### Content Targets (measurable)
+- 2,000 impressions/week (Core KPI)
 - 2 LinkedIn posts/week
 - 3 Reddit/forum answers/week (r/n8n, r/automation, n8n community)
 - 1 long-form article/month (Dev.to or Hashnode)
@@ -196,20 +197,20 @@ Content (broken process diagnosis)
 - **Milestone:** 2 paid templates live, first client ($750–$1,500), 500+ LinkedIn connections, Case Study #2 published
 - Portfolio rule: Case Study #1 (Sentinel) must be ≤ 25% of portfolio narrative by end of this phase
 
-### Month 3–6: Revenue — 10 hrs/week
-- 4 hrs/week: Client projects (1–2 active at any time — NOT 3–5)
+### Month 3–6: Revenue — 15–20 hrs/week
+- 10–15 hrs/week: Client projects (Max 1 Full Build or 2 Quick Builds per month)
 - 3 hrs/week: Content (2 LinkedIn posts/week + 1 blog/month)
 - 2 hrs/week: Template maintenance + 1 new template/quarter
 - 1 hr/week: Community engagement (3 answers/week)
 - **Milestone:** 2–3 completed client projects, $1,000–$2,500/month
 - YouTube DEFERRED — insufficient bandwidth before Month 6
-- Managed hosting offered to past clients only (not actively marketed)
+- Continuous Automation offered to past clients only (not actively marketed)
 - **Portfolio rule:** Minimum 4 case studies by end of Month 6. Case Study #1 ≤ 25% of portfolio narrative.
 
 ### Month 6–September 2026: Pre-Graduation Sprint — 12–15 hrs/week
 - **Graduate with:** 4–6 case studies, $2,000–$4,000/month revenue, decision data on specialization
 - YouTube starts HERE if bandwidth allows
-- Managed hosting offered to past clients proactively
+- Continuous Automation offered to past clients proactively
 
 ### Post-Graduation (September 2026+) — 30–40 hrs/week
 - Full-time AXELO or employed + AXELO hybrid based on revenue data (see Section 11)

@@ -134,7 +134,8 @@ Build modular sub-workflows. Trust output, verify reasoning.
 - Deploy system to staging environment
 - Client tests with real data or approved test data
 - Client has 5 business days to report issues
-- AXELO fixes all reported issues within PRD scope
+- Maximum 2 revision cycles during UAT. Cycle 3 defaults to a $150/hour change-order.
+- AXELO fixes all reported issues within PRD scope during the allowed revision cycles
 - Client signs off: "This system meets the requirements defined in the PRD"
 - Sign-off format: confirmation message or email (no legal docs required at this stage)
 - Only after sign-off does Phase 5 begin
@@ -154,13 +155,19 @@ The automation Talvin builds must run without intervention. The client must neve
 
 **Degradation protocol:** Fetch (1.5s timeout) → success: render → failure: silent fallback, zero errors, zero broken UI → cache sessionStorage 2hr TTL → site works if ALL APIs down.
 
-**Managed Operations Clarification:**
-Managed Operations is an OPTIONAL UPGRADE (separate from zero-maintenance). When active, Talvin provides: hosting infrastructure, proactive monitoring, quarterly optimization reviews, priority support, and version upgrades. The client's system still works without Talvin — managed ops is convenience and insurance, not dependency.
+**Continuous Automation (vCFO of Ops) Clarification:**
+Continuous Automation is an OPTIONAL EVOLUTION LAYER (separate from zero-maintenance). When active, Talvin provides: 1 Quarterly Business Review (QBR), priority bandwidth for Phase-2 feature rollouts, proactive monitoring for scaling limits, and version upgrades. Included: Max 2 hours of direct support/month + 1 architecture review call/quarter. The client's system still works without Talvin — this layer is for continuous improvement, not dependency.
 
-"Zero-maintenance means the client's system runs independently. Managed operations is an optional service layer — the client can leave at any time and their system keeps working. We never create dependency. We create convenience."
+"Zero-maintenance means the client's system runs independently. Continuous automation is an optional service layer — the client can leave at any time and their system keeps working. We never create dependency. We create evolution."
+
+**Legal & Break/Fix Warranty:**
+- 30-Day Break/Fix Warranty included in handover.
+- Warranty is IMMEDIATELY VOID if the client modifies Supabase schemas, n8n nodes, or API connections.
+- Voided warranties incur a $150/hour incident recovery rate.
+- Master Service Agreement (MSA) MUST include an indemnification clause: AXELO is not liable for financial losses, regulatory fines, or damages resulting from unflagged compliance events or system limitations.
 
 **Governance & BYOI (Bring Your Own Infrastructure):**
-When a managed client wants to leave, AXELO provides a migration guide, exports all configs, and hands over all documentation. Client owns everything. Exit is clean within 5 business days of request.
+When a continuous automation client wants to leave, AXELO provides a migration guide, exports all configs, and hands over all documentation. Client owns everything. Exit is clean within 5 business days of request.
 
 ---
 
