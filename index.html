@@ -290,7 +290,7 @@
             <div class="max-w-4xl mx-auto">
                 <div class="text-center mb-12" data-aos="fade-up">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4">The Diagnostic Engine</h2>
-                    <p class="text-slate-400 text-lg">Send us the breakdown. We'll return a functional automation architecture prescription within 48 hours. Completely free.<br><span class="text-xs text-slate-500 mt-2 block">(Requires capacity constraint: Max 8 hours/wk volume in Month 0-1)</span></p>
+                    <p class="text-slate-400 text-lg">Send us the breakdown. We'll return a functional automation architecture prescription within 48 hours. Completely free.<br><span class="text-xs text-slate-500 mt-2 block">Capacity constrained to ensure premium delivery. Current SLA: 48 hours.</span></p>
                 </div>
                 
                 <form id="diagnostic-form" method="POST" action="https://ygmzmblyaxempvfewndr.supabase.co/functions/v1/submit-diagnostic" class="glass-panel-solid p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden" data-aos="zoom-in" data-aos-delay="100">
@@ -495,7 +495,7 @@
                         ],
                         "caseStudyMetrics": {"rules":28,"hours":15,"accuracy":99},
                         "microCaseStudies": [
-                            {"badge":"","labelType":"MICRO-CASE STUDY","title":"Invoice Auto-Processor","description":"Saved an accounting team 12 hours/week. AI extracts PDF data and pushes to Airtable.","impactText":"Impact: $15K/yr value","price":"$750","priceSubtext":"(Quick Build)","ctaText":"Get Similar Built","ctaHref":"#diagnostic","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"blue"},
+                            {"badge":"","labelType":"MICRO-CASE STUDY","title":"Invoice Auto-Processor","description":"Saved an accounting team 12 hours/week. AI extracts PDF data and pushes to Airtable.","impactText":"Impact: $15K/yr value","price":"$49","priceSubtext":"DIY Template","ctaText":"Get Template","ctaHref":"https://gumroad.com/l/invoice-auto-processor","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"blue"},
                             {"badge":"POPULAR","labelType":"QUICK WIN","title":"Lead to CRM Pipeline","description":"Zero lost leads. Typeform → Enrichment → Supabase → Slack in seconds.","impactText":"DIY Template","price":"$29","priceSubtext":"","ctaText":"View Template","ctaHref":"https://gumroad.com/l/lead-to-crm","ctaClass":"btn-primary w-full py-3 flex items-center justify-center rounded text-sm font-mono text-white","themeBorder":"border-blue-500/30","accentClass":"blue"},
                             {"badge":"","labelType":"PREMIUM SYSTEM","title":"Compliance Pattern Kit","description":"The Sentinel V2 architectural pattern with full technical docs and schemas.","impactText":"Battle-Tested System","price":"$297","priceSubtext":"","ctaText":"View Pattern","ctaHref":"https://gumroad.com/l/compliance-pattern","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"emerald"}
                         ]
@@ -594,29 +594,77 @@
 
             // Initialize countUp instance explicitly empty here, fetch handles actual counts
 
-            // 5. Formspree AJAX Submission
+            // 5. UTM Attribution — parse URL params and persist for form submission
+            const getUtmParams = () => {
+                const p = new URLSearchParams(window.location.search);
+                return {
+                    utm_source:   p.get('utm_source')   || sessionStorage.getItem('axelo_utm_source')   || '',
+                    utm_medium:   p.get('utm_medium')   || sessionStorage.getItem('axelo_utm_medium')   || '',
+                    utm_campaign: p.get('utm_campaign') || sessionStorage.getItem('axelo_utm_campaign') || '',
+                };
+            };
+            // Cache UTMs so they survive same-session navigation
+            (() => {
+                const p = new URLSearchParams(window.location.search);
+                if (p.get('utm_source'))   sessionStorage.setItem('axelo_utm_source',   p.get('utm_source'));
+                if (p.get('utm_medium'))   sessionStorage.setItem('axelo_utm_medium',   p.get('utm_medium'));
+                if (p.get('utm_campaign')) sessionStorage.setItem('axelo_utm_campaign', p.get('utm_campaign'));
+            })();
+
+            // 6. LocalStorage Draft Rescue — persist textarea so a network timeout doesn't destroy the lead
+            const DRAFT_KEY = 'axelo_diagnostic_draft';
+            const problemTextarea = document.querySelector('textarea[name="problem"]');
+            if (problemTextarea) {
+                // Restore draft on page load
+                const savedDraft = localStorage.getItem(DRAFT_KEY);
+                if (savedDraft) problemTextarea.value = savedDraft;
+
+                // Save on every keystroke (debounced 500ms)
+                let draftTimer;
+                problemTextarea.addEventListener('input', () => {
+                    clearTimeout(draftTimer);
+                    draftTimer = setTimeout(() => {
+                        localStorage.setItem(DRAFT_KEY, problemTextarea.value);
+                    }, 500);
+                });
+            }
+
+            // 7. Diagnostic Form AJAX Submission
             const form = document.getElementById('diagnostic-form');
             const submitBtn = document.getElementById('submit-btn');
             const btnOriginalHtml = submitBtn.innerHTML;
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
+
                 // Form Loading State
                 submitBtn.disabled = true;
                 submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
                 submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span>PROCESSING...</span>';
 
                 try {
+                    // Build FormData and append UTM attribution fields
+                    const payload = new FormData(form);
+                    const utms = getUtmParams();
+                    payload.append('utm_source',   utms.utm_source);
+                    payload.append('utm_medium',   utms.utm_medium);
+                    payload.append('utm_campaign', utms.utm_campaign);
+
                     // Send to Supabase Edge Function
                     const response = await fetch(form.action, {
                         method: form.method,
-                        body: new FormData(form),
+                        body: payload,
                         headers: { 'Accept': 'application/json' }
                     });
 
+                    if (response.status === 429) {
+                        throw new Error('RATE_LIMIT');
+                    }
+
                     if (response.ok) {
                         form.reset();
+                        // Clear saved draft on successful submission
+                        localStorage.removeItem(DRAFT_KEY);
                         // SweetAlert Success
                         Swal.fire({
                             title: 'System Diagnostic Initiated',
@@ -631,17 +679,20 @@
                             }
                         });
                     } else {
-                        throw new Error('Supabase Edge function returned error.');
+                        throw new Error('SERVER_ERROR');
                     }
                 } catch (error) {
+                    const isRateLimit = error.message === 'RATE_LIMIT';
                     Swal.fire({
-                        title: 'Transmission Failed',
-                        text: 'Unable to route payload. Please try again or email directly.',
+                        title: isRateLimit ? 'Submission Limit Reached' : 'Transmission Failed',
+                        text: isRateLimit
+                            ? 'Maximum 3 diagnostics per 24 hours. Your existing request is being processed.'
+                            : 'Unable to route payload. Please try again or email directly.',
                         icon: 'error',
                         background: '#0F172A',
                         color: '#f8fafc',
                         confirmButtonColor: '#10b981',
-                        confirmButtonText: 'RETRY'
+                        confirmButtonText: isRateLimit ? 'UNDERSTOOD' : 'RETRY'
                     });
                 } finally {
                     // Reset Button State
