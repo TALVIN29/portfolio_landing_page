@@ -571,8 +571,8 @@
             const initCountUp = (id, targetVal, options = {}) => {
                 const el = document.getElementById(id);
                 if (!el) return;
-                
-                const countUp = new countUp.CountUp(id, targetVal, {
+
+                const cu = new countUp.CountUp(id, targetVal, {
                     duration: 2.5,
                     useEasing: true,
                     ...options
@@ -581,8 +581,8 @@
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
-                            if (!countUp.error) {
-                                countUp.start();
+                            if (!cu.error) {
+                                cu.start();
                             }
                             observer.unobserve(entry.target);
                         }
