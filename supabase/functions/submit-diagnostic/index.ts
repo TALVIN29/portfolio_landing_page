@@ -1,19 +1,40 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, accept',
-}
+const allowedOrigin = Deno.env.get('ALLOWED_ORIGIN') || 'https://your-portfolio.netlify.app';
+
+const getCorsHeaders = (origin: string | null) => {
+  // If allowedOrigin is set to a specific domain, use it; otherwise echo the request origin for localhost/netlify
+  const safeOrigin = origin && (origin === allowedOrigin || origin.endsWith('netlify.app') || origin.startsWith('http://localhost')) 
+    ? origin 
+    : allowedOrigin;
+    
+  return {
+    'Access-Control-Allow-Origin': safeOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, accept',
+  };
+};
 
 // --- RATE LIMITING CONSTANTS ---
 const RATE_LIMIT_MAX = 3;        // Max submissions per IP
 const RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-serve(async (req) => {
+serve(async (req: Request) => {
+  const origin = req.headers.get('Origin');
+  const corsHeaders = getCorsHeaders(origin);
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
+  }
+
+  // Reject unauthorized origins
+  const safeOrigin = corsHeaders['Access-Control-Allow-Origin'];
+  if (origin && safeOrigin !== origin && safeOrigin !== '*') {
+    return new Response(JSON.stringify({ error: 'CORS Origin Denied' }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 403,
+    });
   }
 
   try {

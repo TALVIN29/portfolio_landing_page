@@ -6,6 +6,13 @@
     <meta name="description" content="AXELO | We find broken business operations and turn them into automated systems that run without you.">
     <title>AXELO | Automation Architect</title>
     
+    <!-- OpenGraph Meta Tags -->
+    <meta property="og:title" content="AXELO | Automation Architect">
+    <meta property="og:description" content="We find broken business operations and turn them into automated systems that run without you.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://raw.githubusercontent.com/TALVIN29/portfolio_landing_page/main/assets/og-image.png">
+    <meta name="twitter:card" content="summary_large_image">
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -197,7 +204,7 @@
                         <i class="fa-solid fa-book-open text-blue-400 text-2xl" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-2xl font-bold text-slate-50 mb-4 font-mono">Full Ownership</h3>
-                    <p class="text-base text-slate-400 leading-relaxed mt-auto">Every project includes minimum 10-page documentation, complete ownership transfer, and an explicit <strong>30-Day Break/Fix Warranty</strong>. You hold the keys. We build without lock-in.</p>
+                    <p class="text-base text-slate-400 leading-relaxed mt-auto">Every project includes minimum 10-page documentation, complete ownership transfer, and an explicit <strong>30-Day Break/Fix Warranty*</strong>. You hold the keys. We build without lock-in.</p>
                 </div>
             </div>
         </section>
@@ -345,6 +352,7 @@
             <div class="text-sm font-mono text-slate-500 text-center">
                 <p>Designed to outlive its creator.</p>
                 <p class="mt-1 text-xs opacity-70">© 2026 AXELO. Single-page deterministic architecture.</p>
+                <p class="mt-2 text-[10px] opacity-60 max-w-lg mx-auto leading-tight">* Warranty covers AXELO code defects. Excludes 3rd-party API deprecations, rate-limit changes, or client infrastructure modifications.</p>
             </div>
             
             <div class="flex gap-4">
@@ -445,16 +453,16 @@
                 }
 
                 // CountUp Execution
-                if (typeof countUp !== 'undefined') {
-                    initCountUp('count-rules', data.caseStudyMetrics.rules, { prefix: '', suffix: '' });
-                    initCountUp('count-hours', data.caseStudyMetrics.hours, { prefix: '', suffix: '+' });
-                    initCountUp('count-accuracy', data.caseStudyMetrics.accuracy, { prefix: '', suffix: '' });
+                if (typeof countUp !== 'undefined' && data?.caseStudyMetrics) {
+                    initCountUp('count-rules', data.caseStudyMetrics.rules || 0, { prefix: '', suffix: '' });
+                    initCountUp('count-hours', data.caseStudyMetrics.hours || 0, { prefix: '', suffix: '+' });
+                    initCountUp('count-accuracy', data.caseStudyMetrics.accuracy || 0, { prefix: '', suffix: '' });
                 }
             };
 
             const loadData = async () => {
                 const CACHE_KEY = 'axelo_data';
-                const CACHE_TTL = 7200000; // 2 hours in ms
+                const CACHE_TTL = 300000; // 5 minutes in ms
                 const cached = sessionStorage.getItem(CACHE_KEY);
                 
                 if (cached) {
@@ -485,22 +493,20 @@
                     
                     renderData(data);
                 } catch (err) {
-                    console.warn("Failed to load data.json, using fallback:", err);
-                    const fallbackData = {
-                        "pricing": [
-                            {"id":"quick-build","tierLabel":"Quick Build","price":"$750","priceRangeText":"-$1,500","features":["1-2 core automations","Standard integrations","5-7 business days","Anchored to 5-10% value"],"themeClass":"none","accentClass":"blue","isOptional":false},
-                            {"id":"full-build","tierLabel":"Full Build","price":"$2.5k","priceRangeText":"-$5k","features":["3-5 complex automations","Full technical docs","~2 weeks delivery"],"themeClass":"none","accentClass":"blue","isOptional":false},
-                            {"id":"sentinel-class","tierLabel":"Sentinel-Class","price":"$5k","priceRangeText":"-$8k","features":["Complex Rule Engines","Fintech/Compliance grade","Replaces $50K consultancy"],"themeClass":"emerald","accentClass":"emerald","isOptional":false},
-                            {"id":"continuous-automation","tierLabel":"Continuous Automation","price":"$500","priceRangeText":"/mo - $2k/mo","features":["1 QBR + Architecture Review","Priority for feature rollouts","Max 2 hours direct support"],"themeClass":"blue","accentClass":"blue","isOptional":true}
-                        ],
-                        "caseStudyMetrics": {"rules":28,"hours":15,"accuracy":99},
-                        "microCaseStudies": [
-                            {"badge":"","labelType":"MICRO-CASE STUDY","title":"Invoice Auto-Processor","description":"Saved an accounting team 12 hours/week. AI extracts PDF data and pushes to Airtable.","impactText":"Impact: $15K/yr value","price":"$49","priceSubtext":"DIY Template","ctaText":"Get Template","ctaHref":"https://gumroad.com/l/invoice-auto-processor","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"blue"},
-                            {"badge":"POPULAR","labelType":"QUICK WIN","title":"Lead to CRM Pipeline","description":"Zero lost leads. Typeform → Enrichment → Supabase → Slack in seconds.","impactText":"DIY Template","price":"$29","priceSubtext":"","ctaText":"View Template","ctaHref":"https://gumroad.com/l/lead-to-crm","ctaClass":"btn-primary w-full py-3 flex items-center justify-center rounded text-sm font-mono text-white","themeBorder":"border-blue-500/30","accentClass":"blue"},
-                            {"badge":"","labelType":"PREMIUM SYSTEM","title":"Compliance Pattern Kit","description":"The Sentinel V2 architectural pattern with full technical docs and schemas.","impactText":"Battle-Tested System","price":"$297","priceSubtext":"","ctaText":"View Pattern","ctaHref":"https://gumroad.com/l/compliance-pattern","ctaClass":"btn-outline w-full py-3 flex items-center justify-center rounded text-sm font-mono text-slate-300","themeBorder":"","accentClass":"emerald"}
-                        ]
-                    };
-                    renderData(fallbackData);
+                    console.warn("Failed to load data.json, displaying graceful degradation UI:", err);
+                    
+                    const pricingContainer = document.getElementById('pricing-container');
+                    if (pricingContainer) {
+                        pricingContainer.innerHTML = `
+                            <div class="col-span-1 md:col-span-2 lg:col-span-4 flex justify-center py-12">
+                                <div class="glass-panel p-6 rounded-xl border border-yellow-500/20 max-w-lg text-center">
+                                    <i class="fa-solid fa-triangle-exclamation text-yellow-500 text-2xl mb-3"></i>
+                                    <h3 class="text-white font-mono text-sm mb-2">Systems Degraded</h3>
+                                    <p class="text-slate-400 text-sm">Pricing data temporarily unavailable. Please contact directly or check back shortly.</p>
+                                </div>
+                            </div>
+                        `;
+                    }
                 }
             };
             
@@ -594,21 +600,41 @@
 
             // Initialize countUp instance explicitly empty here, fetch handles actual counts
 
-            // 5. UTM Attribution — parse URL params and persist for form submission
+            // 5. UTM Attribution — parse URL params and persist in localStorage (24h)
             const getUtmParams = () => {
+                const getCached = (key) => {
+                    const item = localStorage.getItem(key);
+                    if (!item) return '';
+                    try {
+                        const parsed = JSON.parse(item);
+                        // 24 hours expiration 86400000ms
+                        if (Date.now() - parsed.timestamp > 86400000) {
+                            localStorage.removeItem(key);
+                            return '';
+                        }
+                        return parsed.value;
+                    } catch (e) {
+                        return '';
+                    }
+                };
+                
                 const p = new URLSearchParams(window.location.search);
                 return {
-                    utm_source:   p.get('utm_source')   || sessionStorage.getItem('axelo_utm_source')   || '',
-                    utm_medium:   p.get('utm_medium')   || sessionStorage.getItem('axelo_utm_medium')   || '',
-                    utm_campaign: p.get('utm_campaign') || sessionStorage.getItem('axelo_utm_campaign') || '',
+                    utm_source:   p.get('utm_source')   || getCached('axelo_utm_source')   || '',
+                    utm_medium:   p.get('utm_medium')   || getCached('axelo_utm_medium')   || '',
+                    utm_campaign: p.get('utm_campaign') || getCached('axelo_utm_campaign') || '',
                 };
             };
-            // Cache UTMs so they survive same-session navigation
+            
+            // Cache UTMs with timestamp so they survive tabs and reloads
             (() => {
                 const p = new URLSearchParams(window.location.search);
-                if (p.get('utm_source'))   sessionStorage.setItem('axelo_utm_source',   p.get('utm_source'));
-                if (p.get('utm_medium'))   sessionStorage.setItem('axelo_utm_medium',   p.get('utm_medium'));
-                if (p.get('utm_campaign')) sessionStorage.setItem('axelo_utm_campaign', p.get('utm_campaign'));
+                const cacheUtm = (key, value) => {
+                    if (value) localStorage.setItem(key, JSON.stringify({ value, timestamp: Date.now() }));
+                };
+                cacheUtm('axelo_utm_source',   p.get('utm_source'));
+                cacheUtm('axelo_utm_medium',   p.get('utm_medium'));
+                cacheUtm('axelo_utm_campaign', p.get('utm_campaign'));
             })();
 
             // 6. LocalStorage Draft Rescue — persist textarea so a network timeout doesn't destroy the lead
