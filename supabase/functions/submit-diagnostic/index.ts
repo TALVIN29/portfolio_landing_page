@@ -1,13 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 
-const allowedOrigin = Deno.env.get('ALLOWED_ORIGIN') || 'https://your-portfolio.netlify.app';
+const allowedOrigin = Deno.env.get('ALLOWED_ORIGIN') || 'https://talvin29.github.io';
 
 const getCorsHeaders = (origin: string | null) => {
-  // If allowedOrigin is set to a specific domain, use it; otherwise echo the request origin for localhost/netlify
-  const safeOrigin = origin && (origin === allowedOrigin || origin.endsWith('netlify.app') || origin.startsWith('http://localhost')) 
-    ? origin 
-    : allowedOrigin;
+  // Allow the configured origin, local testing avenues (localhost / file:// which is "null"), and Netlify/GitHub pages
+  const isSafe = origin && (
+    origin === allowedOrigin || 
+    origin.endsWith('netlify.app') || 
+    origin.includes('github.io') ||
+    origin.startsWith('http://localhost') ||
+    origin === 'null'
+  );
+  
+  const safeOrigin = isSafe ? origin : allowedOrigin;
     
   return {
     'Access-Control-Allow-Origin': safeOrigin,
