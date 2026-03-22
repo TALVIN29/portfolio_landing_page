@@ -123,10 +123,23 @@ serve(async (req: Request) => {
     const slackWebhookUrl = Deno.env.get('SLACK_WEBHOOK_URL');
     if (slackWebhookUrl) {
       const deadline = new Date(new Date(slaTimestamp).getTime() + (48 * 60 * 60 * 1000));
+      
+      // Format to Malaysia Time (MYT / UTC+8)
+      const formattedDeadline = deadline.toLocaleString('en-US', {
+        timeZone: 'Asia/Kuala_Lumpur',
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZoneName: 'short'
+      });
+
       const utmInfo = utm_source ? `\n*Source:* ${utm_source} / ${utm_medium} / ${utm_campaign}` : '';
 
       const slackPayload = {
-        text: `🚨 *New AXELO Diagnostic Request* 🚨\n\n*Name:* ${name}\n*Email:* ${email}\n*Hours Lost:* ${hours_lost} hrs/wk\n*Problem:* ${problem}${utmInfo}\n\n*48hr SLA Deadline:* ${deadline.toUTCString()}`
+        text: `🚨 *New AXELO Diagnostic Request* 🚨\n\n*Name:* ${name}\n*Email:* ${email}\n*Hours Lost:* ${hours_lost} hrs/wk\n*Problem:* ${problem}${utmInfo}\n\n*48hr SLA Deadline:* ${formattedDeadline}`
       };
 
       await fetch(slackWebhookUrl, {
